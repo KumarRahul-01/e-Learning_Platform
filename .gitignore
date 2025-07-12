@@ -1,0 +1,35 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+
+# Logs
+logs/
+*.log
+
+
+# Build
+/dist
+/build
+
+# Vite
+Client/.vite/
+
+# React
+Client/node_modules/
+Client/build/
+Client/dist/
+
+# Express
+Server/node_modules/
+Server/public/uploads/
+
+# Misc
+*.swp
+*.swo
+
+# IDE
+.vscode/
+.idea/
