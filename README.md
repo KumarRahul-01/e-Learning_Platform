@@ -8,8 +8,17 @@ This is a full-stack e-Learning platform built with Node.js, Express, EJS, and V
   - Email: admin@gmail.com
   - Password: 123456
 - User/client:
+
   - Email: rahul@yopmail.com
   - Password: 123456
+
+## Swagger Documentation
+
+http://localhost:7007/api-docs
+
+## Postman Collection
+
+https://web.postman.co/workspace/My-Workspace~d6f54bd0-6a28-4817-888a-ff1512f4793b/collection/39641434-47ebaa89-d10f-4eec-a12a-78033c109ea4?action=share&source=copy-link&creator=39641434
 
 ## Project Structure
 

@@ -1,0 +1,604 @@
+{
+  "info": {
+    "_postman_id": "47ebaa89-d10f-4eec-a12a-78033c109ea4",
+    "name": "e-Learning",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "39641434"
+  },
+  "item": [
+    {
+      "name": "course/add-course",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRlZDJmMzBkNGYyMzZlNTgzZjhlMzEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTAwNTY5NzQsImV4cCI6MTc1MDY2MTc3NH0.hzMu0bGw3RRNFBuNU8Q4FN6GdBwaEKnd2VqUofqasE8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \r\n  \"title\": \"UI/UX\",\r\n  \"category\": \"Web Design\",\r\n  \"description\": \"Learn the basics of UI/UX\",\r\n  \"lessons\":[\"684fc14f0c13f47e8c7512c9\"],\r\n  \"quizzes\":[\"684fc34812b92d7d0a0598a1\"]\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/course/add-course",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["course", "add-course"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "course/all-courses",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRmYjZhM2MxMTE3Y2U5OWNlZjdlZTEiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MDA1ODYxMCwiZXhwIjoxNzUwNjYzNDEwfQ.7e7zJpK64OJwlM1khphn4URHwfiXwFdQT_w4-PyMhCE",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:7007/course/all-courses",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["course", "all-courses"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "lesson/add-lesson",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRlZDJmMzBkNGYyMzZlNTgzZjhlMzEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTAxNDkyNTAsImV4cCI6MTc1MDc1NDA1MH0.5tinQ6pex8zfQtX-DXWdL3S2UU6hmykwyH2rkI8gSxE",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n \r\n    \"courseId\":\"684702c184cecf2a31b5d44f\",\r\n  \"title\": \"State and Props in React JS\",\r\n  \"videoUrl\": \"https://youtu.be/uQsyobT2Rv8?si=BpCl2Y1SdcMmtWFr\",\r\n  \"duration\": \"20:30\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/lesson/add-lesson",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["lesson", "add-lesson"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "quizzes/add",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRlZDJmMzBkNGYyMzZlNTgzZjhlMzEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTAwNjA2MzYsImV4cCI6MTc1MDY2NTQzNn0.68ye_ZoFwc8B8htYXbF1P7fUnRKV1smveEk80tGyIr4",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"courseId\": \"684fc05365096e15fda83519\",\r\n  \"questions\": [\r\n    {\r\n      \"questionText\": \"What does UI stand for?\",\r\n      \"options\": [\"User Insight\", \"Unified Interface\", \"User Interface\", \"Universal Interaction\"],\r\n      \"correctAnswer\": 2\r\n    },\r\n    {\r\n      \"questionText\": \"Which of the following is a key principle of UX design?\",\r\n      \"options\": [\"Aesthetics over usability\", \"Navigation complexity\", \"User-centered design\", \"Minimal feedback\"],\r\n      \"correctAnswer\": 2\r\n    },\r\n    {\r\n      \"questionText\": \"What tool is commonly used for creating wireframes?\",\r\n      \"options\": [\"Photoshop\", \"Figma\", \"After Effects\", \"Canva\"],\r\n      \"correctAnswer\": 1\r\n    }\r\n   \r\n  ]\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/quizzes/add",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["quizzes", "add"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "quizzes/course/courseId",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRlOWQ3OWFmN2YwMTE2YzRjZDUzZWIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MTk1NjQ5NywiZXhwIjoxNzUyNTYxMjk3fQ.nJSwojAobgwV2USLgoLva4Qqtx88vw_QJjSKR3ZFwKA",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:7007/quizzes/course/684fb630c1117ce99cef7ede",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["quizzes", "course", "684fb630c1117ce99cef7ede"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "quizzes/courseId/submit",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYyYWQxNzZjYWM5YWRhNTcyODRmYTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTIwNDc0MTcsImV4cCI6MTc1MjY1MjIxN30.WQpEmjd1_gcpW_jS-BJNMpsdvKul6eUHB9V34z23Wk0",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"answers\": [2]\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/quizzes/684702c184cecf2a31b5d44f/submit",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["quizzes", "684702c184cecf2a31b5d44f", "submit"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "lesson/get-lessons",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRmYjZhM2MxMTE3Y2U5OWNlZjdlZTEiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MDkxNzA1NywiZXhwIjoxNzUxNTIxODU3fQ.tdVzxzRTtW2B8w3TY9Rf43k20BNIqV0PKK9BIhL4Fcg",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:7007/lesson/get-lessons",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["lesson", "get-lessons"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user/register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\":\"Student\",\r\n    \"email\":\"Student@gmail.com\",\r\n    \"password\":\"123456\",\r\n    \"role\":\"student\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/user/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["user", "register"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user/login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n   \r\n    \"email\":\"baitharahulkumar23@gmail.com\",\r\n    \"password\":\"789456\"\r\n   \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/user/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["user", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "progress/userId/courseId",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRmYjZhM2MxMTE3Y2U5OWNlZjdlZTEiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MDA1ODYxMCwiZXhwIjoxNzUwNjYzNDEwfQ.7e7zJpK64OJwlM1khphn4URHwfiXwFdQT_w4-PyMhCE",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:7007/progress/684fb6a3c1117ce99cef7ee1/684fc05365096e15fda83519",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": [
+            "progress",
+            "684fb6a3c1117ce99cef7ee1",
+            "684fc05365096e15fda83519"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "progress/complete-lesson",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY5NDQ4NmYwM2NhOWZlYmVlZTFjZTciLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MTc4ODM3NCwiZXhwIjoxNzUyMzkzMTc0fQ.wwpdkoO9-lZFhBZWKI-vmxfmGaOS9cx4DKFFOIAqXrQ",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n \r\n  \"courseId\": \"684702c184cecf2a31b5d44f\",\r\n  \"lessonId\": \"68512a7879c646f50ab825e8\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/progress/complete-lesson",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["progress", "complete-lesson"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "progress/save-quiz-score",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYyYWQxNzZjYWM5YWRhNTcyODRmYTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTIwNDc0MTcsImV4cCI6MTc1MjY1MjIxN30.WQpEmjd1_gcpW_jS-BJNMpsdvKul6eUHB9V34z23Wk0",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"userId\": \"684fb6a3c1117ce99cef7ee1\",\r\n  \"courseId\": \"684fc05365096e15fda83519\",\r\n  \"quizId\": \"684fc34812b92d7d0a0598a1\",\r\n  \"score\": 100\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/progress/save-quiz-score",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["progress", "save-quiz-score"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user/enroll",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRmYjZhM2MxMTE3Y2U5OWNlZjdlZTEiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MDA1NDYwOCwiZXhwIjoxNzUwNjU5NDA4fQ.5Savu5AZxMOKwcOLhL_L4FK0Mg73lqRF6qC6uSZTMB8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"courseId\": \"684fc05365096e15fda83519\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/user/enroll",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["user", "enroll"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user/profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRlOWQ3OWFmN2YwMTE2YzRjZDUzZWIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MTk1NjQ5NywiZXhwIjoxNzUyNTYxMjk3fQ.nJSwojAobgwV2USLgoLva4Qqtx88vw_QJjSKR3ZFwKA",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:7007/user/profile",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["user", "profile"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user/complete-lesson",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRmYjZhM2MxMTE3Y2U5OWNlZjdlZTEiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MDA1ODYxMCwiZXhwIjoxNzUwNjYzNDEwfQ.7e7zJpK64OJwlM1khphn4URHwfiXwFdQT_w4-PyMhCE",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"userId\": \"684fb6a3c1117ce99cef7ee1\",\r\n  \"courseId\": \"684fc05365096e15fda83519\",\r\n  \"lessonId\": \"684fce81ab0804bcb34ca7d3\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/user/complete-lesson",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["user", "complete-lesson"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "course/:id",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRlZDJmMzBkNGYyMzZlNTgzZjhlMzEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTA2MDMzOTcsImV4cCI6MTc1MTIwODE5N30.mXO7rDAHqHn_bx0zbFXO90zk7WKR3hZIREymA_6M4SI",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:7007/course/684702c184cecf2a31b5d44f",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["course", "684702c184cecf2a31b5d44f"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "lesson/get-lessons-by-course/courseId",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY5NDQ4NmYwM2NhOWZlYmVlZTFjZTciLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MTc4ODM3NCwiZXhwIjoxNzUyMzkzMTc0fQ.wwpdkoO9-lZFhBZWKI-vmxfmGaOS9cx4DKFFOIAqXrQ",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:7007/lesson/get-lessons-by-course/684702c184cecf2a31b5d44f",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": [
+            "lesson",
+            "get-lessons-by-course",
+            "684702c184cecf2a31b5d44f"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "/quizzes/get-all-quizzes",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRlOWQ3OWFmN2YwMTE2YzRjZDUzZWIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MTk1NjQ5NywiZXhwIjoxNzUyNTYxMjk3fQ.nJSwojAobgwV2USLgoLva4Qqtx88vw_QJjSKR3ZFwKA",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:7007/quizzes/get-all-quizzes",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["quizzes", "get-all-quizzes"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user/remove-enrolled-course",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODRlOWQ3OWFmN2YwMTE2YzRjZDUzZWIiLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MTcyMjQ1NywiZXhwIjoxNzUyMzI3MjU3fQ.FlPQwyBDfRZxZ0DwCNV8TYcVGTVuimndgRx1zMOQXJ4",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"courseId\":\"6863934700938159185dbb73\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/user/remove-enrolled-course",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["user", "remove-enrolled-course"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user/reset-password-link",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY5NDQ4NmYwM2NhOWZlYmVlZTFjZTciLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MTcyOTM2MCwiZXhwIjoxNzUyMzM0MTYwfQ.w473zeWCQa0cTKqt1-kEanP0ogOVOeq70eXyVFa_ai8",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n   \r\n    \"email\":\"abc@yopmail.com\"\r\n   \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/user/reset-password-link",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["user", "reset-password-link"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user/reset-password/:token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY5NDQ4NmYwM2NhOWZlYmVlZTFjZTciLCJyb2xlIjoic3R1ZGVudCIsImlhdCI6MTc1MTcyOTcyOSwiZXhwIjoxNzUyMzM0NTI5fQ.ugRNLrjvZh9fbUMRvBery4qzLyqG7wI5AYc3kS0dftU",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"password\":\"000000\",\r\n    \"confirmPassword\":\"000000\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:7007/user/reset-password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY5NDQ4NmYwM2NhOWZlYmVlZTFjZTciLCJpYXQiOjE3NTE3MzA3MDEsImV4cCI6MTc1MTczNDMwMX0.ExbGkOrpwgNBh0NS8epe_bJ1Z2d66iXPTA13CV6cqHg",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": [
+            "user",
+            "reset-password",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODY5NDQ4NmYwM2NhOWZlYmVlZTFjZTciLCJpYXQiOjE3NTE3MzA3MDEsImV4cCI6MTc1MTczNDMwMX0.ExbGkOrpwgNBh0NS8epe_bJ1Z2d66iXPTA13CV6cqHg"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "quizzes/quizId",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2ODYyYWQxNzZjYWM5YWRhNTcyODRmYTciLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NTIwNDc0MTcsImV4cCI6MTc1MjY1MjIxN30.WQpEmjd1_gcpW_jS-BJNMpsdvKul6eUHB9V34z23Wk0",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:7007/quizzes/685d0536f527578adf074cdf",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "7007",
+          "path": ["quizzes", "685d0536f527578adf074cdf"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

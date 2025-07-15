@@ -1,0 +1,431 @@
+openapi: 3.0.0
+info:
+  title: E-learning Platform API
+  version: 1.0.0
+  description: API documentation for the E-learning platform
+
+servers:
+  - url: http://localhost:7007
+    description: Local development server
+
+tags:
+  - name: Course
+  - name: Lesson
+  - name: Progress
+  - name: Quiz
+  - name: User
+
+paths:
+  /course/add-course:
+    post:
+      tags: [Course]
+      summary: Create a new course
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                category:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: number
+      responses:
+        201:
+          description: Course created
+
+  /course/all-courses:
+    get:
+      tags: [Course]
+      summary: Get all courses
+      security: [{ bearerAuth: [] }]
+      responses:
+        200:
+          description: List of courses
+
+  /course/{id}:
+    get:
+      tags: [Course]
+      summary: Get a course by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      security: [{ bearerAuth: [] }]
+      responses:
+        200:
+          description: Course data
+
+  /lesson/add-lesson:
+    post:
+      tags: [Lesson]
+      summary: Create a new lesson
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                courseId:
+                  type: string
+                title:
+                  type: string
+                content:
+                  type: string
+      responses:
+        201:
+          description: Lesson created
+
+  /lesson/get-lessons:
+    get:
+      tags: [Lesson]
+      summary: Get all lessons
+      security: [{ bearerAuth: [] }]
+      responses:
+        200:
+          description: List of lessons
+
+  /lesson/get-lesson/{id}:
+    get:
+      tags: [Lesson]
+      summary: Get a lesson by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string }
+      security: [{ bearerAuth: [] }]
+      responses:
+        200:
+          description: Lesson data
+
+  /lesson/get-lessons-by-course/{courseId}:
+    get:
+      tags: [Lesson]
+      summary: Get lessons by course ID
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema: { type: string }
+      security: [{ bearerAuth: [] }]
+      responses:
+        200:
+          description: List of lessons
+
+  /lesson/complete-lesson:
+    post:
+      tags: [Progress]
+      summary: Mark a lesson as complete
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lessonId:
+                  type: string
+                userId:
+                  type: string
+      responses:
+        200:
+          description: Lesson marked complete
+
+  /quiz/save-quiz-score:
+    post:
+      tags: [Progress]
+      summary: Save quiz score
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quizId:
+                  type: string
+                userId:
+                  type: string
+                score:
+                  type: number
+      responses:
+        200:
+          description: Quiz score saved
+
+  /quiz/{userId}/{courseId}:
+    get:
+      tags: [Progress]
+      summary: Get user progress for a course
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema: { type: string }
+        - in: path
+          name: courseId
+          required: true
+          schema: { type: string }
+      security: [{ bearerAuth: [] }]
+      responses:
+        200:
+          description: Progress data
+
+  /quiz/add:
+    post:
+      tags: [Quiz]
+      summary: Create a quiz
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                courseId:
+                  type: string
+                questions:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        201:
+          description: Quiz created
+
+  /quiz/get-all-quizzes:
+    get:
+      tags: [Quiz]
+      summary: Get all quizzes
+      security: [{ bearerAuth: [] }]
+      responses:
+        200:
+          description: List of quizzes
+
+  /quiz/{quizId}:
+    get:
+      tags: [Quiz]
+      summary: Get quiz by ID
+      parameters:
+        - in: path
+          name: quizId
+          required: true
+          schema: { type: string }
+      security: [{ bearerAuth: [] }]
+      responses:
+        200:
+          description: Quiz data
+
+  /quiz/course/{courseId}:
+    get:
+      tags: [Quiz]
+      summary: Get quizzes by course ID
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema: { type: string }
+      security: [{ bearerAuth: [] }]
+      responses:
+        200:
+          description: Quizzes list
+
+  /quiz/{courseId}/submit:
+    post:
+      tags: [Quiz]
+      summary: Submit quiz answers
+      parameters:
+        - in: path
+          name: courseId
+          required: true
+          schema: { type: string }
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                answers:
+                  type: array
+                  items:
+                    type: object
+      responses:
+        200:
+          description: Quiz submitted
+
+  /user/register:
+    post:
+      tags: [User]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                role:
+                  type: string
+      responses:
+        201:
+          description: User registered
+
+  /user/login:
+    post:
+      tags: [User]
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Login successful
+
+  /user/reset-password-link:
+    post:
+      tags: [User]
+      summary: Send password reset link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        200:
+          description: Email sent
+
+  /user/reset-password/{token}:
+    post:
+      tags: [User]
+      summary: Reset password
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+      responses:
+        200:
+          description: Password updated
+
+  /user/enroll:
+    post:
+      tags: [User]
+      summary: Enroll in a course
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                courseId:
+                  type: string
+      responses:
+        200:
+          description: Enrolled
+
+  /user/remove-enrolled-course:
+    delete:
+      tags: [User]
+      summary: Remove enrolled course
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                courseId:
+                  type: string
+      responses:
+        200:
+          description: Course removed
+
+  /user/profile:
+    get:
+      tags: [User]
+      summary: Get user profile
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - in: query
+          name: userId
+          required: true
+          schema: { type: string }
+      responses:
+        200:
+          description: Profile data
+
+  /user/complete-lesson:
+    post:
+      tags: [User]
+      summary: Mark lesson complete (User version)
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                lessonId:
+                  type: string
+      responses:
+        200:
+          description: Lesson marked complete
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

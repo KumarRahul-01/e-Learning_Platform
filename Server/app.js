@@ -1,4 +1,7 @@
 const express = require("express");
+const swaggerUi = require('swagger-ui-express');
+const fs = require('fs');
+const yaml = require('js-yaml');
 const dotenv = require("dotenv");
 const path = require("path");
 const connectDB = require("./app/config/db");
@@ -13,6 +16,9 @@ dotenv.config();
 connectDB();
 
 const app = express();
+// Load Swagger YAML
+const swaggerDocument = yaml.load(fs.readFileSync('./Docs/swagger.yaml', 'utf8'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(cors());
 app.use(
   session({
