@@ -20,6 +20,10 @@ http://localhost:7007/api-docs
 
 https://web.postman.co/workspace/My-Workspace~d6f54bd0-6a28-4817-888a-ff1512f4793b/collection/39641434-47ebaa89-d10f-4eec-a12a-78033c109ea4?action=share&source=copy-link&creator=39641434
 
+## gitHub Repository
+
+https://github.com/KumarRahul-01/e-Learning_Platform
+
 ## Project Structure
 
 ```
