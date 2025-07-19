@@ -51,6 +51,7 @@ class QuizController {
       return res.status(200).json({
         success: true,
         message: "Quizzes fetched successfully.",
+        totalQuizzes: quizzes.length,
         data: quizzes.map((quiz) => ({
           _id: quiz._id,
           courseId: quiz.courseId,
@@ -67,32 +68,35 @@ class QuizController {
   }
 
   // ✅ 2. Get quiz by course ID
- async getQuizByCourseId(req, res) {
-  try {
-    const { courseId } = req.params;
-    const quizzes = await Quiz.find({ courseId }).populate("courseId", "title");
-    
-    if (!quizzes.length) {
-      return res.status(404).json({
+  async getQuizByCourseId(req, res) {
+    try {
+      const { courseId } = req.params;
+      const quizzes = await Quiz.find({ courseId }).populate(
+        "courseId",
+        "title"
+      );
+
+      if (!quizzes.length) {
+        return res.status(404).json({
+          success: false,
+          message: "No quizzes found for this course",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Quizzes retrieved successfully",
+        total: quizzes.length,
+        data: quizzes, // Returns an array of quizzes
+      });
+    } catch (error) {
+      console.error("Error fetching quizzes:", error.message);
+      return res.status(500).json({
         success: false,
-        message: "No quizzes found for this course",
+        message: "Server error",
       });
     }
-
-    return res.status(200).json({
-      success: true,
-      message: "Quizzes retrieved successfully",
-      total: quizzes.length,
-      data: quizzes, // Returns an array of quizzes
-    });
-  } catch (error) {
-    console.error("Error fetching quizzes:", error.message);
-    return res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
   }
-}
 
   // ✅ 3. Submit quiz answers
   async submitQuiz(req, res) {
@@ -115,24 +119,37 @@ class QuizController {
         });
       }
 
-      let score = 0;
+      let correctAnswers = 0;
+      let incorrectAnswers = 0;
+      const results = [];
 
       quiz.questions.forEach((q, index) => {
-        if (answers[index] === q.correctAnswer) {
-          score++;
+        const userAnswer = Number(answers[index]);
+        const isCorrect = userAnswer === q.correctAnswer;
+        if (isCorrect) {
+          correctAnswers++;
+        } else {
+          incorrectAnswers++;
         }
-        if (answers[index] === q.incorrectAnswer) {
-          score--;
-        }
+        results.push({
+          questionText: q.questionText,
+          options: q.options,
+          userAnswer,
+          correctAnswer: q.correctAnswer,
+          isCorrect,
+        });
       });
 
       return res.status(200).json({
         success: true,
         message: "Quiz submitted successfully.",
         totalQuestions: quiz.questions.length,
-        correctAnswers: score,
-        incorrectAnswer: quiz.questions.length - score,
-        scorePercentage: Math.round((score / quiz.questions.length) * 100),
+        correctAnswers,
+        incorrectAnswers,
+        scorePercentage: Math.round(
+          (correctAnswers / quiz.questions.length) * 100
+        ),
+        results, // Array with per-question feedback
       });
     } catch (error) {
       console.error("Error submitting quiz:", error.message);

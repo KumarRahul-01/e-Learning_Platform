@@ -74,18 +74,24 @@ const PlayQuiz = () => {
     message: "",
     severity: "info",
   });
+  const [results, setResults] = useState([]);
 
   // Quiz submission mutation
   const { mutate: submitQuiz, isLoading: isSubmitting } = useQuizSubmit();
 
   // Update the handleSubmitQuiz function to:
   const handleSubmitQuiz = () => {
+    // Ensure every question has an answer (or null)
+    const orderedAnswers = quiz.questions.map((q) =>
+      typeof answers[q._id] === "number" ? answers[q._id] : null
+    );
+
     submitQuiz(
-      { courseId, quizId, answers },
+      { courseId, quizId, answers: orderedAnswers },
       {
         onSuccess: (data) => {
-          const finalScore = calculateScore();
-          setScore(finalScore);
+          setScore(data.correctAnswers);
+          setResults(data.results); // <-- Save per-question feedback
           setQuizCompleted(true);
           setShowResults(true);
           setShowConfirmDialog(false);
@@ -133,10 +139,10 @@ const PlayQuiz = () => {
   };
 
   // Handle answer selection
-  const handleAnswerChange = (questionId, selectedAnswer) => {
+  const handleAnswerChange = (questionId, selectedOptionIndex) => {
     setAnswers((prev) => ({
       ...prev,
-      [questionId]: selectedAnswer,
+      [questionId]: selectedOptionIndex, // Store index, not text
     }));
   };
 
@@ -390,6 +396,32 @@ const PlayQuiz = () => {
             </Stack>
           </CardContent>
         </Card>
+
+        {results.length > 0 && (
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="h6" mb={2}>
+              Your Answers:
+            </Typography>
+            {results.map((res, idx) => (
+              <Paper key={idx} sx={{ p: 2, mb: 2 }}>
+                <Typography variant="subtitle1">
+                  Q{idx + 1}: {res.questionText}
+                </Typography>
+                <Typography>
+                  Your Answer: {res.options[res.userAnswer]}
+                  {res.isCorrect ? (
+                    <Chip label="Correct" color="success" sx={{ ml: 2 }} />
+                  ) : (
+                    <Chip label="Wrong" color="error" sx={{ ml: 2 }} />
+                  )}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Correct Answer: {res.options[res.correctAnswer]}
+                </Typography>
+              </Paper>
+            ))}
+          </Box>
+        )}
       </Container>
     );
   }
@@ -488,30 +520,20 @@ const PlayQuiz = () => {
 
               <FormControl component="fieldset" fullWidth>
                 <RadioGroup
-                  value={answers[currentQuestion._id] || ""}
+                  value={answers[currentQuestion._id] ?? ""}
                   onChange={(e) =>
-                    handleAnswerChange(currentQuestion._id, e.target.value)
+                    handleAnswerChange(
+                      currentQuestion._id,
+                      Number(e.target.value) // <-- Convert to number
+                    )
                   }
                 >
-                  {currentQuestion.options.map((option, index) => (
+                  {currentQuestion.options.map((option, idx) => (
                     <FormControlLabel
-                      key={index}
-                      value={option}
+                      key={idx}
+                      value={idx} // value is a number
                       control={<Radio />}
-                      label={
-                        <Typography variant="body1" sx={{ py: 1 }}>
-                          {option}
-                        </Typography>
-                      }
-                      sx={{
-                        mb: 1,
-                        p: 2,
-                        borderRadius: 2,
-                        border: `1px solid ${theme.palette.divider}`,
-                        "&:hover": {
-                          backgroundColor: theme.palette.action.hover,
-                        },
-                      }}
+                      label={option}
                     />
                   ))}
                 </RadioGroup>
