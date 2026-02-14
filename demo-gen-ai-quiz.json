@@ -1,0 +1,63 @@
+{
+  "quizTitle": "Generative AI Fundamentals",
+  "description": "Test your knowledge about Generative AI, machine learning models, and their applications",
+  "totalQuestions": 5,
+  "passingScore": 60,
+  "questions": [
+    {
+      "questionId": 1,
+      "question": "What does GAI stand for in the context of artificial intelligence?",
+      "options": [
+        "General Artificial Intelligence",
+        "Generative Artificial Intelligence",
+        "Graphical Artificial Intelligence",
+        "Global Artificial Intelligence"
+      ],
+      "correctAnswer": 1,
+      "explanation": "GAI stands for Generative Artificial Intelligence, which refers to AI systems that can create new content like text, images, and code."
+    },
+    {
+      "questionId": 2,
+      "question": "Which of the following is a popular large language model developed by OpenAI?",
+      "options": ["BERT", "ChatGPT", "DALL-E", "LLaMA"],
+      "correctAnswer": 1,
+      "explanation": "ChatGPT is a well-known conversational AI model developed by OpenAI based on GPT architecture. While DALL-E and LLaMA are also OpenAI/Meta models, ChatGPT is the most famous for text generation."
+    },
+    {
+      "questionId": 3,
+      "question": "What is the primary training objective of transformer-based language models like GPT?",
+      "options": [
+        "Image classification",
+        "Predicting the next token in a sequence",
+        "Real-time translation",
+        "Video summarization"
+      ],
+      "correctAnswer": 1,
+      "explanation": "Transformer-based language models are trained using unsupervised learning to predict the next token (word or subword) in a sequence, which helps them learn language patterns."
+    },
+    {
+      "questionId": 4,
+      "question": "Which technique allows a generative AI model to perform tasks it wasn't explicitly trained on?",
+      "options": [
+        "Reinforcement Learning",
+        "Supervised Learning",
+        "Prompt Engineering",
+        "Data Augmentation"
+      ],
+      "correctAnswer": 2,
+      "explanation": "Prompt Engineering is the technique of crafting specific inputs (prompts) to guide generative AI models to perform desired tasks effectively without additional training."
+    },
+    {
+      "questionId": 5,
+      "question": "What is a major ethical concern with generative AI models?",
+      "options": [
+        "They are too expensive to run",
+        "They can generate biased or misinformation content",
+        "They require constant human supervision",
+        "They can only process text data"
+      ],
+      "correctAnswer": 1,
+      "explanation": "A significant ethical concern is that generative AI models can perpetuate biases from their training data and generate convincing but false information (hallucinations)."
+    }
+  ]
+}

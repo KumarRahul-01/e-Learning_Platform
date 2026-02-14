@@ -116,7 +116,7 @@ const CourseById = () => {
       currency: "INR",
       name: "E-Learning Platform",
       description: `Enrollment for ${course.title}`,
-      image: "/logo192.png",
+      image: "/e-learning.png",
       handler: async () => {
         try {
           await enroll({ courseId });

@@ -81,9 +81,9 @@ const PlayQuiz = () => {
 
   // Update the handleSubmitQuiz function to:
   const handleSubmitQuiz = () => {
-    // Ensure every question has an answer (or null)
-    const orderedAnswers = quiz.questions.map((q) =>
-      typeof answers[q._id] === "number" ? answers[q._id] : null
+    // Map answers by question index, not _id
+    const orderedAnswers = quiz.questions.map((_, idx) =>
+      typeof answers[idx] === "number" ? answers[idx] : null
     );
 
     submitQuiz(
@@ -91,7 +91,7 @@ const PlayQuiz = () => {
       {
         onSuccess: (data) => {
           setScore(data.correctAnswers);
-          setResults(data.results); // <-- Save per-question feedback
+          setResults(data.results);
           setQuizCompleted(true);
           setShowResults(true);
           setShowConfirmDialog(false);
@@ -139,10 +139,10 @@ const PlayQuiz = () => {
   };
 
   // Handle answer selection
-  const handleAnswerChange = (questionId, selectedOptionIndex) => {
+  const handleAnswerChange = (questionIndex, selectedOptionIndex) => {
     setAnswers((prev) => ({
       ...prev,
-      [questionId]: selectedOptionIndex, // Store index, not text
+      [questionIndex]: selectedOptionIndex,
     }));
   };
 
@@ -520,18 +520,18 @@ const PlayQuiz = () => {
 
               <FormControl component="fieldset" fullWidth>
                 <RadioGroup
-                  value={answers[currentQuestion._id] ?? ""}
+                  value={answers[currentQuestionIndex] ?? ""}
                   onChange={(e) =>
                     handleAnswerChange(
-                      currentQuestion._id,
-                      Number(e.target.value) // <-- Convert to number
+                      currentQuestionIndex,
+                      Number(e.target.value)
                     )
                   }
                 >
                   {currentQuestion.options.map((option, idx) => (
                     <FormControlLabel
                       key={idx}
-                      value={idx} // value is a number
+                      value={idx}
                       control={<Radio />}
                       label={option}
                     />
