@@ -1,9 +1,10 @@
 const express = require("express");
-const swaggerUi = require('swagger-ui-express');
-const fs = require('fs');
-const yaml = require('js-yaml');
+const swaggerUi = require("swagger-ui-express");
+const fs = require("fs");
+const yaml = require("js-yaml");
 const dotenv = require("dotenv");
 const path = require("path");
+const os = require("os");
 const connectDB = require("./app/config/db");
 
 const cors = require("cors");
@@ -17,8 +18,10 @@ connectDB();
 
 const app = express();
 // Load Swagger YAML
-const swaggerDocument = yaml.load(fs.readFileSync('./Docs/swagger.yaml', 'utf8'));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const swaggerDocument = yaml.load(
+  fs.readFileSync("./Docs/swagger.yaml", "utf8"),
+);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(cors());
 app.use(
   session({
@@ -26,9 +29,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 24 hours
+      maxAge: 1000 * 60 * 60 * 24, //! 24 hours
     },
-  })
+  }),
 );
 app.use(flash());
 app.use(cookieParser());
@@ -36,13 +39,13 @@ app.use(
   express.json({
     limit: "50mb",
     extended: true,
-  })
+  }),
 );
 app.use(
   express.urlencoded({
     limit: "50mb",
     extended: true,
-  })
+  }),
 );
 app.use(express.json());
 
@@ -99,7 +102,20 @@ app.use("/progress", progressRouter);
 //   res.send("e-Learning Platform");
 // });
 
-const PORT = 7007;
-app.listen(PORT, () => {
+function getLocalIp() {
+  const nets = os.networkInterfaces();
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      if (net.family === "IPv4" && !net.internal) {
+        return net.address;
+      }
+    }
+  }
+  return "localhost";
+}
+
+const PORT = process.env.PORT || 7007;
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Network access: http://${getLocalIp()}:${PORT}`);
 });
