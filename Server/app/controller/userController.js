@@ -213,7 +213,7 @@ class UserController {
         .select("-password")
         .populate({
           path: "enrolledCourses",
-          select: "title category description",
+          select: "title category description lessons",
         })
         .populate({
           path: "progress",

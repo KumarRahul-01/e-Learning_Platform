@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 import { PROGRESS } from "../query-keys/QueryKeys";
+import { USERS } from "../query-keys/QueryKeys";
 import { markLessonComplete } from "../../../Api/functions/progress";
 
 export const useMarkLessonComplete = () => {
@@ -19,6 +20,7 @@ export const useMarkLessonComplete = () => {
         toast.success(data.message || "Lesson marked complete");
         // Invalidate and refetch progress queries
         queryClient.invalidateQueries({ queryKey: [PROGRESS] });
+        queryClient.invalidateQueries({ queryKey: [USERS] });
       } else {
         toast.error(data.message || "Failed to mark lesson complete");
       }

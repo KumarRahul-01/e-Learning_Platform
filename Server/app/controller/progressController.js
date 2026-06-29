@@ -6,8 +6,8 @@ class ProgressController {
 
  async markLessonComplete(req, res) {
   try {
-    const userId = req.user.id; // from auth middleware
-    const { courseId, lessonId } = req.body;
+    const userId = req.user._id; // from auth middleware
+    const { courseId, lessonId, complete = true } = req.body;
 
     if (!courseId || !lessonId) {
       return res.status(400).json({
@@ -23,29 +23,41 @@ class ProgressController {
         .json({ success: false, message: "User not found." });
     }
 
-    // Fix: Safely check progress entry with courseId
-    let courseProgress = user.progress.find(
-      (p) => p.courseId && p.courseId.toString() === courseId
-    );
+    let progress = await Progress.findOne({ userId, courseId });
 
-    if (courseProgress) {
-      // Prevent duplicate lesson entries
-      if (!courseProgress.completedLessons.includes(lessonId)) {
-        courseProgress.completedLessons.push(lessonId);
-      }
-    } else {
-      user.progress.push({
+    if (!progress) {
+      progress = new Progress({
+        userId,
         courseId,
-        completedLessons: [lessonId],
+        lessonsCompleted: [],
+        quizScores: [],
       });
     }
 
-    await user.save();
+    const lessonAlreadyCompleted = progress.lessonsCompleted.some(
+      (id) => id.toString() === lessonId
+    );
+
+    if (complete && !lessonAlreadyCompleted) {
+      progress.lessonsCompleted.push(lessonId);
+    }
+
+    if (!complete && lessonAlreadyCompleted) {
+      progress.lessonsCompleted.pull(lessonId);
+    }
+
+    await progress.save();
+
+    await User.findByIdAndUpdate(userId, {
+      $addToSet: { progress: progress._id },
+    });
 
     return res.status(200).json({
       success: true,
-      message: "Lesson marked as complete.",
-      progress: user.progress,
+      message: complete
+        ? "Lesson marked as complete."
+        : "Lesson marked as incomplete.",
+      progress,
     });
   } catch (err) {
     console.error("Error marking lesson complete:", err);
@@ -58,9 +70,10 @@ class ProgressController {
   // ✅ 2. Save quiz score
   async saveQuizScore(req, res) {
     try {
-      const { userId, courseId, quizId, score } = req.body;
+      const userId = req.user._id;
+      const { courseId, quizId, score } = req.body;
 
-      if (!userId || !courseId || !quizId || score == null) {
+      if (!courseId || !quizId || score == null) {
         return res.status(400).json({ success: false, message: 'Missing required fields.' });
       }
 
@@ -77,12 +90,17 @@ class ProgressController {
         const existing = progress.quizScores.find(q => q.quizId.toString() === quizId);
         if (existing) {
           existing.score = score; // update score
+          existing.date = new Date();
         } else {
-          progress.quizScores.push({ quizId, score });
+          progress.quizScores.push({ quizId, score, date: new Date() });
         }
       }
 
       await progress.save();
+
+      await User.findByIdAndUpdate(userId, {
+        $addToSet: { progress: progress._id },
+      });
 
       return res.status(200).json({
         success: true,

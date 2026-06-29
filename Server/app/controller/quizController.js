@@ -1,5 +1,7 @@
 const Quiz = require("../model/quiz");
 const Course = require("../model/course");
+const Progress = require("../model/progress");
+const User = require("../model/user");
 const mongoose = require("mongoose");
 
 class QuizController {
@@ -102,9 +104,14 @@ class QuizController {
   async submitQuiz(req, res) {
     try {
       const { courseId } = req.params;
-      const { answers } = req.body; // answers = [1, 0, 2, ...]
+      const { quizId, answers } = req.body; // answers = [1, 0, 2, ...]
 
-      const quiz = await Quiz.findOne({ courseId });
+      const query = { courseId };
+      if (quizId && mongoose.Types.ObjectId.isValid(quizId)) {
+        query._id = quizId;
+      }
+
+      const quiz = await Quiz.findOne(query);
 
       if (!quiz) {
         return res
@@ -124,8 +131,13 @@ class QuizController {
       const results = [];
 
       quiz.questions.forEach((q, index) => {
-        const userAnswer = Number(answers[index]);
-        const isCorrect = userAnswer === q.correctAnswer;
+        const selectedAnswer = Number(answers[index]);
+        const hasValidAnswer =
+          Number.isInteger(selectedAnswer) &&
+          selectedAnswer >= 0 &&
+          selectedAnswer < q.options.length;
+        const userAnswer = hasValidAnswer ? selectedAnswer : null;
+        const isCorrect = hasValidAnswer && userAnswer === q.correctAnswer;
         if (isCorrect) {
           correctAnswers++;
         } else {
@@ -140,15 +152,55 @@ class QuizController {
         });
       });
 
+      const scorePercentage = Math.round(
+        (correctAnswers / quiz.questions.length) * 100
+      );
+
+      if (req.user?._id) {
+        let progress = await Progress.findOne({
+          userId: req.user._id,
+          courseId,
+        });
+
+        if (!progress) {
+          progress = new Progress({
+            userId: req.user._id,
+            courseId,
+            lessonsCompleted: [],
+            quizScores: [],
+          });
+        }
+
+        const existingScore = progress.quizScores.find(
+          (quizScore) => quizScore.quizId.toString() === quiz._id.toString()
+        );
+
+        if (existingScore) {
+          existingScore.score = scorePercentage;
+          existingScore.date = new Date();
+        } else {
+          progress.quizScores.push({
+            quizId: quiz._id,
+            score: scorePercentage,
+            date: new Date(),
+          });
+        }
+
+        await progress.save();
+
+        await User.findByIdAndUpdate(req.user._id, {
+          $addToSet: { progress: progress._id },
+        });
+      }
+
       return res.status(200).json({
         success: true,
         message: "Quiz submitted successfully.",
+        quizId: quiz._id,
         totalQuestions: quiz.questions.length,
         correctAnswers,
         incorrectAnswers,
-        scorePercentage: Math.round(
-          (correctAnswers / quiz.questions.length) * 100
-        ),
+        scorePercentage,
         results, // Array with per-question feedback
       });
     } catch (error) {

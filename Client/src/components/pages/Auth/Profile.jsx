@@ -67,6 +67,8 @@ const Profile = () => {
 
   const user = data?.data;
   const logout = useLogout();
+  const allQuizScores =
+    user?.progress?.flatMap((progress) => progress.quizScores || []) || [];
 
   const handleExpandCourse = (courseId) => {
     setExpandedCourses((prev) => ({
@@ -79,6 +81,10 @@ const Profile = () => {
     return user?.progress?.find(
       (prog) => prog.courseId?._id === courseId || prog.courseId === courseId
     );
+  };
+
+  const getCompletedLessons = (progress) => {
+    return progress?.lessonsCompleted || progress?.completedLessons || [];
   };
 
   const handleRemoveCourse = async (courseId) => {
@@ -106,16 +112,23 @@ const Profile = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
-  const calculateProgressPercentage = (courseId, totalLessons = 10) => {
-    const progress = getCourseProgress(courseId);
-    if (!progress || !progress.completedLessons) return 0;
-    return Math.round((progress.completedLessons.length / totalLessons) * 100);
+  const calculateProgressPercentage = (course, completedCount = 0) => {
+    const totalLessons = course?.lessons?.length || 0;
+    if (totalLessons === 0) return 0;
+
+    const progress = getCourseProgress(course._id);
+    if (!progress || getCompletedLessons(progress).length === 0) return 0;
+    return Math.round((completedCount / totalLessons) * 100);
   };
 
   const getAverageQuizScore = (quizScores) => {
     if (!quizScores || quizScores.length === 0) return 0;
-    const sum = quizScores.reduce((acc, score) => acc + score.score, 0);
-    return Math.round(sum / quizScores.length);
+    const validScores = quizScores.filter(
+      (quizScore) => typeof quizScore.score === "number"
+    );
+    if (validScores.length === 0) return 0;
+    const sum = validScores.reduce((acc, quizScore) => acc + quizScore.score, 0);
+    return Math.round(sum / validScores.length);
   };
 
   return (
@@ -236,7 +249,11 @@ const Profile = () => {
                     Completed Lessons
                   </Typography>
                   <Typography variant="h4" fontWeight="bold" color="primary">
-                    {user?.progress?.reduce((acc, prog) => acc + (prog.completedLessons?.length || 0), 0) || 0}
+                    {user?.progress?.reduce(
+                      (acc, progress) =>
+                        acc + getCompletedLessons(progress).length,
+                      0
+                    ) || 0}
                   </Typography>
                 </Paper>
               </Grid>
@@ -247,11 +264,7 @@ const Profile = () => {
                     Average Quiz Score
                   </Typography>
                   <Typography variant="h4" fontWeight="bold" color="primary">
-                    {user?.progress?.length ? 
-                      Math.round(user.progress.reduce((acc, prog) => {
-                        const avg = getAverageQuizScore(prog.quizScores);
-                        return acc + (isNaN(avg) ? 0 : avg);
-                      }, 0) / user.progress.length) : 0}%
+                    {getAverageQuizScore(allQuizScores)}%
                   </Typography>
                 </Paper>
               </Grid>
@@ -278,11 +291,16 @@ const Profile = () => {
               <List disablePadding>
                 {user.enrolledCourses.map((course) => {
                   const courseProgress = getCourseProgress(course._id);
-                  const lessonsCompleted = courseProgress?.completedLessons?.length || 0;
+                  const completedCourseLessons = getCompletedLessons(courseProgress);
+                  const lessonsCompleted = completedCourseLessons.length;
+                  const totalLessons = course.lessons?.length || 0;
                   const quizScores = courseProgress?.quizScores || [];
                   const averageQuizScore = getAverageQuizScore(quizScores);
                   const isExpanded = expandedCourses[course._id] || false;
-                  const progressPercentage = calculateProgressPercentage(course._id);
+                  const progressPercentage = calculateProgressPercentage(
+                    course,
+                    lessonsCompleted
+                  );
 
                   return (
                     <ListItem
@@ -361,7 +379,7 @@ const Profile = () => {
                             <strong>Progress:</strong> {progressPercentage}%
                           </Typography>
                           <Typography variant="body2">
-                            {lessonsCompleted} of 10 lessons
+                            {lessonsCompleted} of {totalLessons} lessons
                           </Typography>
                         </Box>
                         <LinearProgress
@@ -405,20 +423,20 @@ const Profile = () => {
                       <Collapse in={isExpanded} timeout="auto" unmountOnExit sx={{ width: "100%" }}>
                         <Box sx={{ pl: 2 }}>
                           {/* Completed Lessons */}
-                          {courseProgress?.completedLessons?.length > 0 ? (
+                          {completedCourseLessons.length > 0 ? (
                             <>
                               <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: "bold" }}>
                                 <LessonsIcon fontSize="small" sx={{ mr: 1, verticalAlign: 'middle' }} />
                                 Completed Lessons
                               </Typography>
                               <List dense sx={{ width: "100%", mb: 2 }}>
-                                {courseProgress.completedLessons.map((lessonId, index) => (
+                                {completedCourseLessons.map((lesson, index) => (
                                   <ListItem key={index} sx={{ pl: 0 }}>
                                     <ListItemIcon sx={{ minWidth: 30 }}>
                                       <CheckCircleOutline color="success" fontSize="small" />
                                     </ListItemIcon>
                                     <ListItemText
-                                      primary={`Lesson ${index + 1}`}
+                                      primary={lesson?.title || `Lesson ${index + 1}`}
                                       secondary={`Completed on ${new Date().toLocaleDateString()}`}
                                     />
                                   </ListItem>

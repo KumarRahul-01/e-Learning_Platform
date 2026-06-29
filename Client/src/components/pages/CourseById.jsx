@@ -38,6 +38,7 @@ import { useLessonsByCourseId } from "../../hooks/react-query/query-hooks/lesson
 import { useMarkLessonComplete } from "../../hooks/react-query/query-hooks/progressQuery";
 import { useQuizzesByCourseId } from "../../hooks/react-query/query-hooks/quizQuery";
 import { useQuizById } from "../../hooks/react-query/query-hooks/quizQuery";
+import { useDashboard } from "../../hooks/react-query/query-hooks/authQuery";
 
 const loadRazorpayScript = () =>
   new Promise((resolve) => {
@@ -54,6 +55,8 @@ const CourseById = () => {
   const navigate = useNavigate();
   const { data, isLoading, error } = useCourseById(id);
   const course = data?.data;
+  const { data: profileData } = useDashboard();
+  const user = profileData?.data;
 
   const { data: lessonsData, isLoading: lessonsLoading } = useLessonsByCourseId(course?._id);
   const { data: quizzesData, isLoading: quizzesLoading } = useQuizzesByCourseId(course?._id);
@@ -70,6 +73,22 @@ const CourseById = () => {
 
   const [completingLessons, setCompletingLessons] = React.useState(new Set());
   const [completedLessons, setCompletedLessons] = React.useState(new Set());
+
+  React.useEffect(() => {
+    if (!course?._id || !user?.progress) return;
+
+    const courseProgress = user.progress.find(
+      (progress) =>
+        progress.courseId?._id === course._id || progress.courseId === course._id
+    );
+
+    const completedLessonIds =
+      courseProgress?.lessonsCompleted?.map((lesson) =>
+        typeof lesson === "string" ? lesson : lesson._id
+      ) || [];
+
+    setCompletedLessons(new Set(completedLessonIds));
+  }, [course?._id, user?.progress]);
 
   const handleEnroll = async (courseId) => {
     const token = localStorage.getItem("token");

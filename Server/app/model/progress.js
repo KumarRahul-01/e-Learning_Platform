@@ -9,6 +9,10 @@ const quizScoreSchema = new mongoose.Schema({
   score: {
     type: Number,
     required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
   }
 }, { _id: false });
 

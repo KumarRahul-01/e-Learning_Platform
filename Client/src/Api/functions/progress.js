@@ -1,9 +1,9 @@
 import { axiosInstance } from "../axiosInstance/axiosInstance";
 import { endPoints } from "../endPoints/endPoint";
 
-export const markLessonComplete = async ({ courseId, lessonId }) => {
+export const markLessonComplete = async ({ courseId, lessonId, complete = true }) => {
   try {
-    console.log("Attempting to mark lesson complete:", { courseId, lessonId });
+    console.log("Attempting to update lesson completion:", { courseId, lessonId, complete });
     console.log("Endpoint:", endPoints.progress.markLessonComplete);
     
     const { data } = await axiosInstance.post(
@@ -11,6 +11,7 @@ export const markLessonComplete = async ({ courseId, lessonId }) => {
       {
         courseId,
         lessonId,
+        complete,
       }
     );
     

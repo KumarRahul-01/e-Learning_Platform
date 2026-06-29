@@ -28,7 +28,7 @@ import {
   CheckCircle as CorrectIcon,
   Cancel as IncorrectIcon
 } from "@mui/icons-material";
-import { getAllQuizzes } from "../../Api/functions/quiz";
+import { getAllQuizzes, submitQuizByCourseId } from "../../Api/functions/quiz";
 import { getAllcourses } from "../../Api/functions/courses";
 
 const QuizPage = () => {
@@ -38,8 +38,11 @@ const QuizPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [score, setScore] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
+  const [resultByQuestion, setResultByQuestion] = useState({});
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,19 +95,64 @@ const QuizPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let correct = 0;
-    Object.values(quizzesByCourse).forEach((questions) => {
-      questions.forEach((q) => {
-        const selectedOption = q.options[selectedAnswers[`${q.quizId}-${q.questionIdx}`]];
-        if (selectedOption !== undefined && selectedOption === q.answer) {
-          correct += 1;
-        }
+    setSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const quizSubmissions = {};
+
+      Object.entries(quizzesByCourse).forEach(([courseId, questions]) => {
+        questions.forEach((question) => {
+          if (!quizSubmissions[question.quizId]) {
+            quizSubmissions[question.quizId] = {
+              courseId,
+              quizId: question.quizId,
+              answers: [],
+            };
+          }
+
+          const selectedAnswer =
+            selectedAnswers[`${question.quizId}-${question.questionIdx}`];
+          quizSubmissions[question.quizId].answers[question.questionIdx] =
+            typeof selectedAnswer === "number" ? selectedAnswer : null;
+        });
       });
-    });
-    setScore(correct);
-    setSubmitted(true);
+
+      const responses = await Promise.all(
+        Object.values(quizSubmissions).map(({ courseId, quizId, answers }) =>
+          submitQuizByCourseId(courseId, quizId, answers)
+        )
+      );
+
+      const results = {};
+      let correct = 0;
+      let total = 0;
+
+      responses.forEach((response) => {
+        correct += response.correctAnswers || 0;
+        total += response.totalQuestions || 0;
+
+        response.results?.forEach((result, questionIdx) => {
+          if (response.quizId) {
+            results[`${response.quizId}-${questionIdx}`] = result;
+          }
+        });
+      });
+
+      setResultByQuestion(results);
+      setScore(correct);
+      setTotalQuestions(total);
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error?.response?.data?.message ||
+          "Failed to submit quiz. Please try again."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (loading) {
@@ -156,6 +204,12 @@ const QuizPage = () => {
       </Box>
 
       <form onSubmit={handleSubmit}>
+        {submitError && (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {submitError}
+          </Alert>
+        )}
+
         {Object.entries(quizzesByCourse).map(([courseId, questions], cIdx) => (
           <Card key={courseId} sx={{ mb: 4, borderRadius: 3, boxShadow: 3 }}>
             <CardContent>
@@ -178,8 +232,8 @@ const QuizPage = () => {
                   <Divider sx={{ mb: 3 }} />
                   {questions.map((q, idx) => {
                     const isAnswered = selectedAnswers[`${q.quizId}-${q.questionIdx}`] !== undefined;
-                    const isCorrect = submitted && 
-                                     q.options[selectedAnswers[`${q.quizId}-${q.questionIdx}`]] === q.answer;
+                    const result = resultByQuestion[`${q.quizId}-${q.questionIdx}`];
+                    const isCorrect = submitted && result?.isCorrect;
                     
                     return (
                       <Paper
@@ -215,7 +269,7 @@ const QuizPage = () => {
                         <FormControl component="fieldset" fullWidth>
                           <RadioGroup
                             name={`quiz-${q.quizId}-${q.questionIdx}`}
-                            value={selectedAnswers[`${q.quizId}-${q.questionIdx}`] || ""}
+                            value={selectedAnswers[`${q.quizId}-${q.questionIdx}`] ?? ""}
                             onChange={(e) => handleOptionChange(q.quizId, q.questionIdx, parseInt(e.target.value))}
                           >
                             {Array.isArray(q.options) && q.options.length > 0 ? (
@@ -228,11 +282,11 @@ const QuizPage = () => {
                                     p: 1,
                                     borderRadius: 1,
                                     backgroundColor: 
-                                      submitted && q.answer === opt
+                                      submitted && result?.correctAnswer === oIdx
                                         ? theme.palette.success.light
                                         : submitted && 
                                           selectedAnswers[`${q.quizId}-${q.questionIdx}`] === oIdx && 
-                                          q.answer !== opt
+                                          result?.correctAnswer !== oIdx
                                         ? theme.palette.error.light
                                         : "transparent",
                                     border: `1px solid ${
@@ -249,7 +303,7 @@ const QuizPage = () => {
                                         disabled={submitted}
                                         color={
                                           submitted
-                                            ? q.answer === opt
+                                            ? result?.correctAnswer === oIdx
                                               ? "success"
                                               : selectedAnswers[`${q.quizId}-${q.questionIdx}`] === oIdx
                                                 ? "error"
@@ -265,7 +319,7 @@ const QuizPage = () => {
                                         width: '100%'
                                       }}>
                                         {opt}
-                                        {submitted && q.answer === opt && (
+                                        {submitted && result?.correctAnswer === oIdx && (
                                           <CorrectIcon 
                                             sx={{ 
                                               ml: 1, 
@@ -276,7 +330,7 @@ const QuizPage = () => {
                                         )}
                                         {submitted && 
                                          selectedAnswers[`${q.quizId}-${q.questionIdx}`] === oIdx && 
-                                         q.answer !== opt && (
+                                         result?.correctAnswer !== oIdx && (
                                           <IncorrectIcon 
                                             sx={{ 
                                               ml: 1, 
@@ -313,7 +367,10 @@ const QuizPage = () => {
                             borderRadius: 1
                           }}>
                             <Typography variant="body2" color="text.secondary">
-                              <strong>Explanation:</strong> {q.explanation || "No explanation provided."}
+                              <strong>Your answer:</strong>{" "}
+                              {result?.userAnswer === null || result?.userAnswer === undefined
+                                ? "Not answered"
+                                : result.options?.[result.userAnswer]}
                             </Typography>
                           </Box>
                         )}
