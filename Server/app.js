@@ -19,7 +19,7 @@ connectDB();
 const app = express();
 // Load Swagger YAML
 const swaggerDocument = yaml.load(
-  fs.readFileSync("./Docs/swagger.yaml", "utf8"),
+  fs.readFileSync("./Docs/Swagger.yaml", "utf8"),
 );
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(cors());
