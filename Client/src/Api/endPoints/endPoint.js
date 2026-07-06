@@ -1,7 +1,4 @@
-
-
-
-export const baseURL = "http://localhost:7007";
+export const baseURL = "https://e-learning-platform-1-txdz.onrender.com";
 
 export const endPoints = {
   user: {

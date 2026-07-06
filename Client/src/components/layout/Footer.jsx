@@ -20,7 +20,10 @@ const Footer = () => {
   ];
 
   const contactLinks = [
-    { title: "Admin Dashboard", link: "http://localhost:7007/admin/login" },
+    {
+      title: "Admin Dashboard",
+      link: "https://e-learning-platform-1-txdz.onrender.com/admin/login",
+    },
     { title: "support@elearning.com", link: "mailto:support@elearning.com" },
     { title: "+1-800-123-4567", link: "tel:+18001234567" },
     { title: "New York, USA", link: "https://goo.gl/maps/xyz" },
