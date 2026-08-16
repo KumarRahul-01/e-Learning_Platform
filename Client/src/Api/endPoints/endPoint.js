@@ -1,5 +1,6 @@
-export const baseURL = "https://e-learning-platform-1-txdz.onrender.com";
-
+// export const baseURL = "https://e-learning-platform-1-txdz.onrender.com";
+// export const baseURL = "http://localhost:7007";
+export const baseURL = import.meta.env.VITE_API_URL;
 export const endPoints = {
   user: {
     register: "/user/register",
