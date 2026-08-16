@@ -1,0 +1,14 @@
+[build]
+  # Build and deploy the compiled Vite app, not Client's source files.
+  base = "Client"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  VITE_API_URL = "https://e-learning-platform-1-txdz.onrender.com"
+
+# Allow React Router routes to work when opened or refreshed directly.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
